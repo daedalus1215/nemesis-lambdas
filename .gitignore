@@ -3,3 +3,6 @@ nemesis-get-users-lambda/get_users.zip
 
 nemesis-create-transaction-lambda/node_modules/*
 nemesis-create-transaction-lambda/create-transaction.zip
+
+nemesis-get-user-lambda/node_modules/*
+nemesis-get-user-lambda/get_user.zip
