@@ -20,12 +20,15 @@ export async function handler(event) {
 
     const tableName = "nemesis-users";
 
-    const scanParams = {
-      TableName: tableName
-    };
-    
-    const { Items: users } = await dynamoDB.scan(scanParams).promise();
 
+    const params = {
+      TableName: "nemesis-users",
+      Key: {
+        userId: userId, // Ensure this matches the partition key in your table schema
+      },
+    };
+
+    const users = await dynamoDB.get(params).promise();
     return {
       statusCode: 200,
       body: JSON.stringify({ users }),
