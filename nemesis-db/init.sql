@@ -10,6 +10,7 @@ CREATE TABLE Transactions (
     sender_id INTEGER,
     receiver_id INTEGER,
     amount REAL NOT NULL,
+    description TEXT,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_id) REFERENCES Users(user_id),
     FOREIGN KEY (receiver_id) REFERENCES Users(user_id),
