@@ -8,4 +8,4 @@ nemesis-create-transaction-lambda/node_modules/*
 nemesis-create-transaction-lambda/create_transaction.zip
 
 nemesis-get-transactions-by-userId-lambda/node_modules/*
-nemesis-get-transactions-by-userId-lambda/get-userId-transaction.zip
+nemesis-get-transactions-by-userId-lambda/nemesis-get-transactions-by-userId-lambda.zip
