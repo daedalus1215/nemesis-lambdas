@@ -19,21 +19,42 @@ export async function handler(event) {
 
     const userId = payload.sub;
 
-    const response = await dynamoDB
-      .query({
-        TableName: 'nemesis-transactions',
-        KeyConditionExpression: "user_id = :userId",
-        ExpressionAttributeValues: {
-          ":userId": userId,
-        },
-        ScanIndexForward: false, // Sort by timestamp in descending order
-      })
-      .promise();
-
+    const [senderResponse, receiverResponse] = await Promise.all([
+      dynamoDB
+        .query({
+          TableName: 'nemesis-transactions',
+          IndexName: 'SenderTransactionsIndex',
+          KeyConditionExpression: "sender_id = :userId",
+          ExpressionAttributeValues: {
+            ":userId": userId,
+          },
+          ScanIndexForward: false,
+        })
+        .promise(),
+      dynamoDB
+        .query({
+          TableName: 'nemesis-transactions',
+          IndexName: 'ReceiverTransactionsIndex',
+          KeyConditionExpression: "receiver_id = :userId",
+          ExpressionAttributeValues: {
+            ":userId": userId,
+          },
+          ScanIndexForward: false,
+        })
+        .promise(),
+    ]);
+    
+    // Combine and sort transactions
+    const allTransactions = [...senderResponse.Items, ...receiverResponse.Items];
+    allTransactions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
     return {
       statusCode: 200,
-      body: JSON.stringify({ transactions: response.Items }),
+      body: JSON.stringify({ transactions: allTransactions }),
     };
+
+
+
   } catch (error) {
     if (error.name === "TokenExpiredError" || error.name === "TokenInvalidError") {
       return { statusCode: 401, body: "Invalid or expired token" };
