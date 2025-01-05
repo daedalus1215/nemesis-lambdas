@@ -19,7 +19,7 @@ export async function handler(event) {
     console.log("Token payload:", payload);
 
     const body = JSON.parse(event.body);
-    const { amount, receiverId } = body;
+    const { amount, receiverId, description } = body;
 
     if (!amount || amount <= 0) {
       return {
@@ -114,6 +114,7 @@ export async function handler(event) {
                 sender_id: payload.sub,
                 receiver_id: receiverId,
                 amount: amount,
+                description,
                 timestamp: new Date().toISOString(),
               },
             },
